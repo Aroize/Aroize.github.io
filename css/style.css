@@ -38,7 +38,7 @@ ul {
     flex-wrap: wrap;
 }
 
-li {
+.favourite-inside {
     list-style-type: none;
     background-color: #aaa;
     margin: 5px 0;
@@ -132,6 +132,11 @@ input {
 
 .update-mobile {
     display: none;
+}
+
+.favorites-list {
+    display: flex;
+    list-style: none;
 }
 
 @media screen and (max-width: 600px) {
