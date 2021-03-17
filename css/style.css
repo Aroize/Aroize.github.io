@@ -8,16 +8,19 @@ body {
     font-weight: 200;
 }
 
-.container {
+.root {
     max-width: 960px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1em 4em;
     padding: 10px;
 }
 
-.header {
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em 4em;
+}
+
+header {
     grid-column: span 2;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -35,7 +38,7 @@ ul {
     flex-wrap: wrap;
 }
 
-li {
+.favourite-inside {
     list-style-type: none;
     background-color: #aaa;
     margin: 5px 0;
@@ -102,6 +105,7 @@ input {
     border-radius: 5px;
     background-color: #eee;
     margin-right: 5px;
+    padding-left: 15px;
 }
 
 .current-city-icon {
@@ -118,18 +122,66 @@ input {
     max-height: 50px;
 }
 
+.weather-here {
+    white-space: nowrap;
+}
+
+.update-desktop {
+    display: block;
+}
+
+.update-mobile {
+    display: none;
+}
+
+.favorites-list {
+    grid-column: span 2;
+    list-style: none;
+}
+
 @media screen and (max-width: 600px) {
     .container {
         grid-template-columns: 1fr;
     }
 
     .favorites,
-    .header {
+    header {
         grid-column: 1;
+    }
+
+    .favorites-list {
+        grid-column: span 1;
     }
 
     h2 {
         grid-column: span 2;
+    }
+
+    form {
+        width: 100%;
+        display: flex;
+    }
+
+    input {
+        flex-grow: 3;
+    }
+
+    .update-btn {
+        margin-left: 20px;
+        max-width: 56px;
+        max-height: 56px;
+    }
+
+    .update-desktop {
+        display: none;
+    }
+
+    .update-mobile {
+        width: 100%;
+        max-width: 56px;
+        height: 100%;
+        max-height: 56px;
+        display: block;
     }
 
     .favorites {
