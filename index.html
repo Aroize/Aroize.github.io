@@ -10,14 +10,14 @@
     <title>Document</title>
 </head>
 <body>
-<header>
+<header class="root">
     <h1><span class="weather-here">Погода здесь</span></h1>
     <button class="update-btn">
         <span class="update-desktop">Обновить геолокацию</span>
         <img class="update-mobile" src="img/refresh.png">
     </button>
 </header>
-<main>
+<main class="container root">
     <div class="weather-by-geolocation">
         <h2>Saint Petersburg</h2>
         <div class="name">
@@ -41,96 +41,104 @@
             <button class="btn-circle">+</button>
         </form>
     </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
-    <div class="favourite-city">
-        <div class="weather-by-city">
-            <h4>Moscow</h4>
-            <span class="temp">8°C</span>
-            <img class="city-icon" src="./img/apple-weather.png" alt="">
-            <button class="btn-circle">X</button>
-        </div>
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
+    <ul class="favorites-list">
+        <li class="container">
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+        </li>
+        <li class="container">
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+        </li>
+        <li class="container">
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+            <div class="favourite-city">
+                <div class="weather-by-city">
+                    <h4>Moscow</h4>
+                    <span class="temp">8°C</span>
+                    <img class="city-icon" src="./img/apple-weather.png" alt="">
+                    <button class="btn-circle">X</button>
+                </div>
+                <ul>
+                    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+                    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+                    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+                    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+                    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
 </main>
 </body>
 </html>
