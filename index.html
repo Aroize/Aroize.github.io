@@ -10,11 +10,14 @@
     <title>Document</title>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>Погода здесь</h1>
-        <button class="update-btn">Обновить геолокацию</button>
-    </div>
+<header>
+    <h1><span class="weather-here">Погода здесь</span></h1>
+    <button class="update-btn">
+        <span class="update-desktop">Обновить геолокацию</span>
+        <img class="update-mobile" src="img/refresh.png">
+    </button>
+</header>
+<main>
     <div class="weather-by-geolocation">
         <h2>Saint Petersburg</h2>
         <div class="name">
@@ -33,10 +36,10 @@
     </div>
     <div class="favorites">
         <h3>Избранное</h3>
-        <div class="form">
-            <input type="text"/>
+        <form>
+            <input type="text" placeholder="Добавить новый город"/>
             <button class="btn-circle">+</button>
-        </div>
+        </form>
     </div>
     <div class="favourite-city">
         <div class="weather-by-city">
@@ -128,6 +131,6 @@
             <li>Координаты<span class="info-city">[59.88, 30.42]</span></li>
         </ul>
     </div>
-</div>
+</main>
 </body>
 </html>
