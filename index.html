@@ -7,22 +7,27 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400&display=swap" rel="stylesheet">
+    <script src="js/geo-initial.js"></script>
     <title>Document</title>
 </head>
 <body>
 <header class="root">
     <h1><span class="weather-here">Погода здесь</span></h1>
-    <button class="update-btn">
+    <button onclick="mainWorker.updateCurrentCity()" class="update-btn">
         <span class="update-desktop">Обновить геолокацию</span>
         <img class="update-mobile" src="img/refresh.png">
     </button>
 </header>
 <main class="container root">
-    <div class="weather-by-geolocation">
-        <h2>Saint Petersburg</h2>
+    <div id="loading-view" class="loading-container">
+        <div class="loader-placeholder">Подождите, данные загружаются</div>
+        <img src="img/spinner.gif" alt="loading">
+    </div>
+    <div>
+        <h2 id="geolocation-city-name">Saint Petersburg</h2>
         <div class="name">
-            <img class="current-city-icon" src="./img/apple-weather.png" alt="weather">
-            <span class="temp-big">8°C</span>
+            <img id="geolocation-city-icon" class="geolocation-city-icon" src="./img/apple-weather.png" alt="weather">
+            <span id="geolocation-temperature" class="temp-big">8°C</span>
         </div>
     </div>
     <div class="info-by-geolocation">
