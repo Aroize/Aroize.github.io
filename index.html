@@ -22,13 +22,11 @@
     <div class="favorites">
         <h3>Избранное</h3>
         <form>
-            <input type="text" placeholder="Добавить новый город"/>
-            <button class="btn-circle">+</button>
+            <input id="new-favourite-city" type="text" placeholder="Добавить новый город"/>
+            <button onclick="addCityToFavouritesByName(); return false;" class="btn-circle">+</button>
         </form>
     </div>
-    <ul class="favorites-list">
-
-    </ul>
+    <ul id="favourites-list" class="favorites-list"></ul>
 </main>
 </body>
 </html>

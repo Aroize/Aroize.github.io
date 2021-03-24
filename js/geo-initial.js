@@ -5,7 +5,7 @@ window.onload = function () {
     const storedCitiesCallback = function (cities) {
         cities.forEach(city => {
             const cityWeatherCallback = function (weather) {
-                appendCityToFavourites(city, weather);
+                appendCityToFavourites(city, weather, false);
             }
             requestCityWeather(city, cityWeatherCallback);
         });
@@ -13,7 +13,6 @@ window.onload = function () {
 
     getStorageCities(storedCitiesCallback);
 }
-
 
 /**
  * geo utils
@@ -50,6 +49,29 @@ function getCurrentGeo(callback) {
     geolocation.getCurrentPosition(positionCallback, positionErrorCallback, null);
 }
 
+function addCityToFavouritesByName() {
+    const inputField = document.getElementById("new-favourite-city");
+    const query = inputField.value;
+
+    if (!hasCityNameInStorage(query)) {
+        inputField.value = "";
+
+        const city = {
+            "city_name": query,
+            "lat": null,
+            "lon": null
+        };
+
+        const requestCallback = function (weather) {
+            appendCityToFavourites(city, weather, true);
+        };
+
+        requestCityWeather(city, requestCallback);
+    } else {
+        alert("У вас уже добавлен этот город в избранное!");
+    }
+}
+
 /**
  * api utils
  */
@@ -60,12 +82,15 @@ function formatRequestWithGeoCoords(lat, lon) {
     return `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&lang=ru`
 }
 
+function formatRequestWithQuery(query) {
+    return `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}&lang=ru`
+}
+
 function formatWeatherIcon(iconId) {
     return `http://openweathermap.org/img/wn/${iconId}@4x.png`
 }
 
 function requestCityWeather(city, requestCallback) {
-    // TODO(): add lat and lon to check
     if (city["city_name"] == null) {
         requestCityWeatherByGeoCoords(city, requestCallback);
     } else {
@@ -92,8 +117,24 @@ function requestCityWeatherByGeoCoords(city, callback) {
     xhr.send();
 }
 
-function requestCityWeatherByCityName() {
-
+function requestCityWeatherByCityName(city, callback) {
+    const xhr = new XMLHttpRequest();
+    const requestUrl = formatRequestWithQuery(city['city_name']);
+    xhr.open("GET", requestUrl, true);
+    xhr.onload = function (event) {
+        if (xhr.readyState === 4) {
+            if (xhr.status !== 200) {
+                console.log("Bruh moment");
+            } else {
+                const jsonResponse = JSON.parse(xhr.responseText);
+                city['lat'] = jsonResponse['coord']['lat'];
+                city['lon'] = jsonResponse['coord']['lon'];
+                const weather = parseWeather(jsonResponse);
+                callback(weather);
+            }
+        }
+    }
+    xhr.send();
 }
 
 function parseWeather(weatherJson) {
@@ -218,8 +259,53 @@ function hideCurrentWeatherBlock() {
     }
 }
 
-function appendCityToFavourites(city, weather) {
+/**
+ * parent div should extend class="weather-by-city"
+ */
 
+const favouriteCityBlock = `
+<div class="weather-by-city">
+    <h4>Moscow</h4>
+    <span class="temp">8°C</span>
+    <img class="city-icon" src="./img/apple-weather.png" alt="">
+    <button class="btn-circle">X</button>
+</div>
+<ul>
+    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+</ul>
+`
+
+function createFavouriteCityBlock() {
+    const favouritesList = document.getElementById("favourites-list");
+    let lastListItem = favouritesList.lastChild;
+    if (lastListItem == null || lastListItem.childNodes.length === 2) {
+        lastListItem = document.createElement("li");
+        lastListItem.classList.add("container");
+        favouritesList.appendChild(lastListItem);
+    }
+    const favouriteCityDiv = document.createElement("div");
+    favouriteCityDiv.classList.add("favourite-city");
+    favouriteCityDiv.innerHTML = favouriteCityBlock;
+
+    lastListItem.appendChild(favouriteCityDiv);
+    return favouriteCityDiv;
+}
+
+function appendCityToFavourites(city, weather, needToSaveToStorage) {
+    if (needToSaveToStorage) {
+        saveCityToStorage(city);
+    }
+    const cityBlock = createFavouriteCityBlock();
+
+    const cityHeader = cityBlock.children[0];
+    fillCityHeader(city, weather, cityHeader);
+
+    const cityList = cityBlock.children[1].children;
+    fillCityList(city, weather, cityList);
 }
 
 function showCurrentCityGeo(city, weather) {
@@ -236,8 +322,20 @@ function showCurrentCityGeo(city, weather) {
     cityIcon.src = weather['icon_url'];
     cityTemperature.innerHTML = `${weather['temperature']}°C`;
 
-
     const geoInfoList = geoInfo.children[0].children;
+    fillCityList(city, weather, geoInfoList);
+}
+
+function fillCityHeader(city, weather, header) {
+    const cityName = header.getElementsByTagName("h4")[0];
+    cityName.innerHTML = city['city_name'];
+    const cityTemperature = header.getElementsByTagName("span")[0];
+    cityTemperature.innerHTML = `${weather['temperature']}°C`;
+    const cityIcon = header.getElementsByTagName("img")[0];
+    cityIcon.src = weather['icon_url'];
+}
+
+function fillCityList(city, weather, geoInfoList) {
     for (let i = 0; i < geoInfoList.length; ++i) {
         const listItem = geoInfoList[i];
         const geoField = listItem.children[0];
@@ -272,6 +370,33 @@ function capitalizeFirstLetter(string) {
  * storage utils
  */
 
-function getStorageCities() {
-    return [];
+const storage = window.localStorage;
+
+let citiesList = [];
+
+function getStorageCities(callback) {
+    for (let i = 0; i < storage.length; i++) {
+        const key = storage.key(i);
+        citiesList.push(JSON.parse(storage.getItem(key)));
+    }
+    console.log(citiesList);
+    callback(citiesList);
+}
+
+function saveCityToStorage(city) {
+    const cityKey = city['city_name'];
+    const cityStr = JSON.stringify(city);
+    storage.setItem(cityKey, cityStr);
+    citiesList.push(city);
+}
+
+function removeCityFromStorage(city) {
+    citiesList = citiesList.filter((value, index, array) => value['city_name'] !== city['city_name']);
+    storage.removeItem(city['city_name']);
+}
+
+function hasCityNameInStorage(cityName) {
+    const lowerCaseCityName = cityName.toLowerCase();
+    const index = citiesList.findIndex(value => value['city_name'].toLowerCase() === lowerCaseCityName);
+    return index !== -1;
 }
