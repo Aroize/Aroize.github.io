@@ -223,12 +223,16 @@ function createHeaderLoadingElement() {
 }
 
 function showHeaderLoadingView() {
+    const btn = document.getElementsByClassName("update-btn")[0];
+    btn.disabled = true;
     hideCurrentWeatherBlock();
     const container = document.getElementById("main-root");
     container.insertBefore(createHeaderLoadingElement(), container.firstChild);
 }
 
 function hideHeaderLoadingView() {
+    const btn = document.getElementsByClassName("update-btn")[0];
+    btn.disabled = false;
     const loadingView = document.getElementById("loading-view");
     loadingView.remove();
 }
