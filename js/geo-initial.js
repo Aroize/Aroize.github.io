@@ -344,7 +344,11 @@ function fillCityHeader(city, weather, header) {
 
     const btn = header.getElementsByTagName("button")[0];
     btn.onclick = function () {
-        btn.parentElement.parentElement.remove()
+        const liParent = btn.parentElement.parentElement.parentElement;
+        btn.parentElement.parentElement.remove();
+        if (liParent.children.length !== 0) {
+            rebalanceFavouriteList(liParent);
+        }
         removeCityFromStorage(city)
     }
 }
@@ -373,6 +377,23 @@ function fillCityList(city, weather, geoInfoList) {
                 geoField.innerHTML = `[${Math.floor(city['lat'])}, ${Math.floor(city['lon'])}]`
                 break;
         }
+    }
+}
+
+function rebalanceFavouriteList(singleContainer) {
+    const favList = document.getElementById("favourites-list");
+    if (favList.children.length === 0) {
+        return;
+    }
+    if (favList.children[favList.children.length - 1].children.length === 1) {
+        // Одинокий чел, грустный
+        const oneElement = favList.children[favList.children.length - 1].children[0];
+        oneElement.remove();
+        singleContainer.append(oneElement);
+    } else {
+        // Парный чел, довольный
+        singleContainer.remove();
+        favList.append(singleContainer);
     }
 }
 
