@@ -105,7 +105,11 @@ function requestCityWeatherByGeoCoords(city, callback) {
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status !== 200) {
-                console.log("Bruh moment");
+                if (xhr.status === 404) {
+                    alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
+                } else {
+                    alert(xhr.statusText);
+                }
             } else {
                 const jsonResponse = JSON.parse(xhr.responseText);
                 city['city_name'] = jsonResponse['name'];
@@ -124,7 +128,11 @@ function requestCityWeatherByCityName(city, callback) {
     xhr.onload = function (event) {
         if (xhr.readyState === 4) {
             if (xhr.status !== 200) {
-                console.log("Bruh moment");
+                if (xhr.status === 404) {
+                    alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
+                } else {
+                    alert(xhr.statusText);
+                }
             } else {
                 const jsonResponse = JSON.parse(xhr.responseText);
                 city['lat'] = jsonResponse['coord']['lat'];
@@ -333,6 +341,12 @@ function fillCityHeader(city, weather, header) {
     cityTemperature.innerHTML = `${weather['temperature']}°C`;
     const cityIcon = header.getElementsByTagName("img")[0];
     cityIcon.src = weather['icon_url'];
+
+    const btn = header.getElementsByTagName("button")[0];
+    btn.onclick = function () {
+        btn.parentElement.parentElement.remove()
+        removeCityFromStorage(city)
+    }
 }
 
 function fillCityList(city, weather, geoInfoList) {
