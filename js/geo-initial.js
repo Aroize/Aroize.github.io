@@ -1,5 +1,5 @@
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.slice(0, 1) + string.slice(1);
 }
 
 class Worker {
@@ -111,7 +111,7 @@ class SearchApiManager {
 }
 
 class GeolocationUtils {
-    initialize(successCallback, failureCallback, worker) {
+    initialize(successCallback, failureCallback) {
         const geolocation = navigator.geolocation;
         const positionCallback = function (position) {
             console.log(position);
