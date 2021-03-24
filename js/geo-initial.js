@@ -202,7 +202,7 @@ function showCurrentWeatherBlock() {
     const headerBlock = document.createElement("div");
     headerBlock.innerHTML = headerCityBlock;
     const headerList = document.createElement("div");
-    headerList.id = "info-by-geolocation"
+    headerList.id = "info-by-geolocation";
     headerList.innerHTML = headerCityList;
 
     const container = document.getElementById("main-root");
@@ -212,8 +212,10 @@ function showCurrentWeatherBlock() {
 
 function hideCurrentWeatherBlock() {
     const container = document.getElementById("main-root");
-    container.firstChild.remove();
-    container.firstChild.remove();
+    if (container.children[1].id === "info-by-geolocation") {
+        container.firstChild.remove();
+        container.firstChild.remove();
+    }
 }
 
 function appendCityToFavourites(city, weather) {
