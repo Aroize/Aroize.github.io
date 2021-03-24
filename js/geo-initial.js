@@ -7,6 +7,7 @@ window.onload = function () {
             const cityWeatherCallback = function (weather) {
                 appendCityToFavourites(city, weather, false);
             }
+            showFavouriteCityLoadingPlaceholder(city);
             requestCityWeather(city, cityWeatherCallback);
         });
     }
@@ -65,7 +66,7 @@ function addCityToFavouritesByName() {
         const requestCallback = function (weather) {
             appendCityToFavourites(city, weather, true);
         };
-
+        showFavouriteCityLoadingPlaceholder(city);
         requestCityWeather(city, requestCallback);
     } else {
         alert("У вас уже добавлен этот город в избранное!");
@@ -110,6 +111,8 @@ function requestCityWeatherByGeoCoords(city, callback) {
                 } else {
                     alert(xhr.statusText);
                 }
+                placeHolderCollection[city['city_name']].remove();
+                placeHolderCollection[city['city_name']] = null;
             } else {
                 const jsonResponse = JSON.parse(xhr.responseText);
                 city['city_name'] = jsonResponse['name'];
@@ -133,6 +136,8 @@ function requestCityWeatherByCityName(city, callback) {
                 } else {
                     alert(xhr.statusText);
                 }
+                placeHolderCollection[city['city_name']].remove();
+                placeHolderCollection[city['city_name']] = null;
             } else {
                 const jsonResponse = JSON.parse(xhr.responseText);
                 city['lat'] = jsonResponse['coord']['lat'];
@@ -267,10 +272,6 @@ function hideCurrentWeatherBlock() {
     }
 }
 
-/**
- * parent div should extend class="weather-by-city"
- */
-
 const favouriteCityBlock = `
 <div class="weather-by-city">
     <h4>Moscow</h4>
@@ -287,7 +288,32 @@ const favouriteCityBlock = `
 </ul>
 `
 
-function createFavouriteCityBlock() {
+function createFavouriteCityBlock(city) {
+    const block = placeHolderCollection[city['city_name']];
+    block.innerHTML = favouriteCityBlock;
+    return block;
+}
+
+
+const placeHolderHtml = `
+<div class="weather-by-city">
+    <h4>Moscow</h4>
+    <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
+    <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
+    <button disabled class="btn-circle">X</button>
+</div>
+<ul>
+    <li class="favourite-inside">Ветер<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+    <li class="favourite-inside">Облачность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+    <li class="favourite-inside">Давление<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+    <li class="favourite-inside">Влажность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+    <li class="favourite-inside">Координаты<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+</ul>
+`
+
+const placeHolderCollection = {}
+
+function showFavouriteCityLoadingPlaceholder(city) {
     const favouritesList = document.getElementById("favourites-list");
     let lastListItem = favouritesList.lastChild;
     if (lastListItem == null || lastListItem.childNodes.length === 2) {
@@ -296,18 +322,21 @@ function createFavouriteCityBlock() {
         favouritesList.appendChild(lastListItem);
     }
     const favouriteCityDiv = document.createElement("div");
-    favouriteCityDiv.classList.add("favourite-city");
-    favouriteCityDiv.innerHTML = favouriteCityBlock;
+    favouriteCityDiv.classList.add("loading-city");
+    favouriteCityDiv.innerHTML = placeHolderHtml;
+
+    const loadingCity = favouriteCityDiv.getElementsByTagName("h4")[0];
+    loadingCity.innerHTML = city['city_name'];
 
     lastListItem.appendChild(favouriteCityDiv);
-    return favouriteCityDiv;
+    placeHolderCollection[city['city_name']] = favouriteCityDiv;
 }
 
 function appendCityToFavourites(city, weather, needToSaveToStorage) {
     if (needToSaveToStorage) {
         saveCityToStorage(city);
     }
-    const cityBlock = createFavouriteCityBlock();
+    const cityBlock = createFavouriteCityBlock(city);
 
     const cityHeader = cityBlock.children[0];
     fillCityHeader(city, weather, cityHeader);
@@ -426,7 +455,7 @@ function saveCityToStorage(city) {
 }
 
 function removeCityFromStorage(city) {
-    citiesList = citiesList.filter((value, index, array) => value['city_name'] !== city['city_name']);
+    citiesList = citiesList.filter((value) => value['city_name'] !== city['city_name']);
     storage.removeItem(city['city_name']);
 }
 

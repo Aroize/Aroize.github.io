@@ -149,6 +149,11 @@ input {
     font-size: 200%;
 }
 
+.little-icon {
+    width: 25px;
+    height: 25px;
+}
+
 @media screen and (max-width: 600px) {
     .container {
         grid-template-columns: 1fr;
