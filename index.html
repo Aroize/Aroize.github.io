@@ -13,32 +13,12 @@
 <body>
 <header class="root">
     <h1><span class="weather-here">Погода здесь</span></h1>
-    <button onclick="mainWorker.updateCurrentCity()" class="update-btn">
+    <button onclick="updateCurrentCity()" class="update-btn">
         <span class="update-desktop">Обновить геолокацию</span>
         <img class="update-mobile" src="img/refresh.png">
     </button>
 </header>
-<main class="container root">
-    <div id="loading-view" class="loading-container">
-        <div class="loader-placeholder">Подождите, данные загружаются</div>
-        <img src="img/spinner.gif" alt="loading">
-    </div>
-    <div>
-        <h2 id="geolocation-city-name">Saint Petersburg</h2>
-        <div class="name">
-            <img id="geolocation-city-icon" class="geolocation-city-icon" src="./img/apple-weather.png" alt="weather">
-            <span id="geolocation-temperature" class="temp-big">8°C</span>
-        </div>
-    </div>
-    <div class="info-by-geolocation">
-        <ul>
-            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-        </ul>
-    </div>
+<main class="container root" id="main-root">
     <div class="favorites">
         <h3>Избранное</h3>
         <form>

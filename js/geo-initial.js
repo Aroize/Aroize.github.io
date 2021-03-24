@@ -1,18 +1,6 @@
 window.onload = function () {
 
-    const currentCityGeoCallback = function (lat, lon) {
-        const city = {
-            "city_name": null,
-            "lat": lat,
-            "lon": lon
-        }
-        const currentCityWeatherCallback = function (weather) {
-            showCurrentCityGeo(city, weather);
-        }
-
-        requestCityWeather(city, currentCityWeatherCallback)
-    }
-    getCurrentGeo(currentCityGeoCallback);
+    updateCurrentCity();
 
     const storedCitiesCallback = function (cities) {
         cities.forEach(city => {
@@ -30,6 +18,23 @@ window.onload = function () {
 /**
  * geo utils
  */
+
+function updateCurrentCity() {
+    showHeaderLoadingView();
+    const currentCityGeoCallback = function (lat, lon) {
+        const city = {
+            "city_name": null,
+            "lat": lat,
+            "lon": lon
+        }
+        const currentCityWeatherCallback = function (weather) {
+            showCurrentCityGeo(city, weather);
+        }
+
+        requestCityWeather(city, currentCityWeatherCallback)
+    }
+    getCurrentGeo(currentCityGeoCallback);
+}
 
 function getCurrentGeo(callback) {
     const geolocation = navigator.geolocation;
@@ -150,16 +155,80 @@ function extractWindDirectionFromDegrees(deg) {
  * view utils
  */
 
+const headerLoadingViewInnerHtml = `
+<div class="loader-placeholder">Подождите, данные загружаются</div>
+<img src="img/spinner.gif" alt="loading">
+`
+
+function createHeaderLoadingElement() {
+    const div = document.createElement("div")
+    div.classList.add("loading-container");
+    div.id = "loading-view";
+    div.innerHTML = headerLoadingViewInnerHtml;
+    return div;
+}
+
+function showHeaderLoadingView() {
+    hideCurrentWeatherBlock();
+    const container = document.getElementById("main-root");
+    container.insertBefore(createHeaderLoadingElement(), container.firstChild);
+}
+
+function hideHeaderLoadingView() {
+    const loadingView = document.getElementById("loading-view");
+    loadingView.remove();
+}
+
+const headerCityBlock = `
+<h2 id="geolocation-city-name">Saint Petersburg</h2>
+<div class="name">
+    <img id="geolocation-city-icon" class="geolocation-city-icon" src="./img/apple-weather.png" alt="weather">
+    <span id="geolocation-temperature" class="temp-big">8°C</span>
+</div>
+`
+const headerCityList = `
+<ul>
+    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+</ul>
+`
+
+function showCurrentWeatherBlock() {
+    hideHeaderLoadingView();
+
+    const headerBlock = document.createElement("div");
+    headerBlock.innerHTML = headerCityBlock;
+    const headerList = document.createElement("div");
+    headerList.id = "info-by-geolocation"
+    headerList.innerHTML = headerCityList;
+
+    const container = document.getElementById("main-root");
+    container.insertBefore(headerList, container.firstChild);
+    container.insertBefore(headerBlock, headerList);
+}
+
+function hideCurrentWeatherBlock() {
+    const container = document.getElementById("main-root");
+    container.firstChild.remove();
+    container.firstChild.remove();
+}
+
 function appendCityToFavourites(city, weather) {
 
 }
 
 function showCurrentCityGeo(city, weather) {
+
+    showCurrentWeatherBlock()
+
     const cityName = document.getElementById("geolocation-city-name");
     const cityIcon = document.getElementById("geolocation-city-icon");
     const cityTemperature = document.getElementById("geolocation-temperature");
 
-    const geoInfo = document.getElementsByClassName("info-by-geolocation")[0];
+    const geoInfo = document.getElementById("info-by-geolocation");
 
     cityName.innerHTML = city['city_name'];
     cityIcon.src = weather['icon_url'];
