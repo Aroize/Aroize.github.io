@@ -1,4 +1,8 @@
-window.onload = function () {
+String.prototype.isEmpty = function() {
+    return (this.length === 0 || !this.trim());
+};
+
+window.addEventListener("load", function () {
 
     updateCurrentCity();
 
@@ -13,7 +17,7 @@ window.onload = function () {
     }
 
     getStorageCities(storedCitiesCallback);
-}
+}, false);
 
 /**
  * geo utils
@@ -54,6 +58,11 @@ function addCityToFavouritesByName() {
     const inputField = document.getElementById("new-favourite-city");
     const query = inputField.value;
 
+    if (query.isEmpty()) {
+        alert("Запрос не может быть пустым!");
+        return;
+    }
+
     if (!hasCityNameInStorage(query)) {
         inputField.value = "";
 
@@ -64,7 +73,12 @@ function addCityToFavouritesByName() {
         };
 
         const requestCallback = function (weather) {
-            appendCityToFavourites(city, weather, true);
+            if (hasCityInStorage(city['id'])) {
+                alert("У вас уже добавлен этот город в избранное!");
+                removeCityPlaceholder(city);
+            } else {
+                appendCityToFavourites(city, weather, true);
+            }
         };
         showFavouriteCityLoadingPlaceholder(city);
         requestCityWeather(city, requestCallback);
@@ -103,24 +117,27 @@ function requestCityWeatherByGeoCoords(city, callback) {
     const xhr = new XMLHttpRequest();
     const requestUrl = formatRequestWithGeoCoords(city["lat"], city["lon"]);
     xhr.open("GET", requestUrl, true);
-    xhr.onload = function (e) {
-        if (xhr.readyState === 4) {
-            if (xhr.status !== 200) {
-                if (xhr.status === 404) {
-                    alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
-                } else {
-                    alert(xhr.statusText);
-                }
-                placeHolderCollection[city['city_name']].remove();
-                placeHolderCollection[city['city_name']] = null;
+    xhr.addEventListener("load", function (event) {
+        if (xhr.status !== 200) {
+            if (xhr.status === 404) {
+                alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
             } else {
-                const jsonResponse = JSON.parse(xhr.responseText);
-                city['city_name'] = jsonResponse['name'];
-                const weather = parseWeather(jsonResponse);
-                callback(weather);
+                alert(xhr.statusText);
             }
+            placeHolderCollection[city['city_name']].remove();
+            placeHolderCollection[city['city_name']] = null;
+        } else {
+            const jsonResponse = JSON.parse(xhr.responseText);
+            city['id'] = jsonResponse['id'];
+            city['city_name'] = jsonResponse['name'];
+            const weather = parseWeather(jsonResponse);
+            callback(weather);
         }
-    }
+    }, false);
+    xhr.addEventListener("error", function (event) {
+        alert("Произошла ошибка! Проверьте доступ к сети");
+        removeCityPlaceholder(city);
+    }, false)
     xhr.send();
 }
 
@@ -128,25 +145,28 @@ function requestCityWeatherByCityName(city, callback) {
     const xhr = new XMLHttpRequest();
     const requestUrl = formatRequestWithQuery(city['city_name']);
     xhr.open("GET", requestUrl, true);
-    xhr.onload = function (event) {
-        if (xhr.readyState === 4) {
-            if (xhr.status !== 200) {
-                if (xhr.status === 404) {
-                    alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
-                } else {
-                    alert(xhr.statusText);
-                }
-                placeHolderCollection[city['city_name']].remove();
-                placeHolderCollection[city['city_name']] = null;
+    xhr.addEventListener("load", function (event) {
+        if (xhr.status !== 200) {
+            if (xhr.status === 404) {
+                alert("Введенного Вами города нет в базе. Проверьте правильность написания имени города");
             } else {
-                const jsonResponse = JSON.parse(xhr.responseText);
-                city['lat'] = jsonResponse['coord']['lat'];
-                city['lon'] = jsonResponse['coord']['lon'];
-                const weather = parseWeather(jsonResponse);
-                callback(weather);
+                alert(xhr.statusText);
             }
+            removeCityPlaceholder(city);
+        } else {
+            const jsonResponse = JSON.parse(xhr.responseText);
+            city['id'] = jsonResponse['id'];
+            city['lat'] = jsonResponse['coord']['lat'];
+            city['lon'] = jsonResponse['coord']['lon'];
+            const weather = parseWeather(jsonResponse);
+            callback(weather);
+
         }
-    }
+    }, false);
+    xhr.addEventListener("error", function (event) {
+        alert("Произошла ошибка! Проверьте доступ к сети");
+        removeCityPlaceholder(city);
+    }, false)
     xhr.send();
 }
 
@@ -298,7 +318,6 @@ function createFavouriteCityBlock(city) {
     return block;
 }
 
-
 const placeHolderHtml = `
 <div class="weather-by-city">
     <h4>Moscow</h4>
@@ -316,6 +335,11 @@ const placeHolderHtml = `
 `
 
 const placeHolderCollection = {}
+
+function removeCityPlaceholder(city) {
+    placeHolderCollection[city['city_name']].remove();
+    placeHolderCollection[city['city_name']] = null;
+}
 
 function showFavouriteCityLoadingPlaceholder(city) {
     const favouritesList = document.getElementById("favourites-list");
@@ -376,14 +400,14 @@ function fillCityHeader(city, weather, header) {
     cityIcon.src = weather['icon_url'];
 
     const btn = header.getElementsByTagName("button")[0];
-    btn.onclick = function () {
+    btn.addEventListener("click", function () {
         const liParent = btn.parentElement.parentElement.parentElement;
         btn.parentElement.parentElement.remove();
         if (liParent.children.length !== 0) {
             rebalanceFavouriteList(liParent);
         }
         removeCityFromStorage(city)
-    }
+    }, false);
 }
 
 function fillCityList(city, weather, geoInfoList) {
@@ -452,9 +476,9 @@ function getStorageCities(callback) {
 }
 
 function saveCityToStorage(city) {
-    const cityKey = city['city_name'];
+    const cityKey = city['id'];
     const cityStr = JSON.stringify(city);
-    storage.setItem(cityKey, cityStr);
+    storage.setItem(cityKey.toString(), cityStr);
     citiesList.push(city);
 }
 
@@ -466,5 +490,10 @@ function removeCityFromStorage(city) {
 function hasCityNameInStorage(cityName) {
     const lowerCaseCityName = cityName.toLowerCase();
     const index = citiesList.findIndex(value => value['city_name'].toLowerCase() === lowerCaseCityName);
+    return index !== -1;
+}
+
+function hasCityInStorage(cityId) {
+    const index = citiesList.findIndex(value => value['id'] === cityId);
     return index !== -1;
 }
