@@ -11,6 +11,72 @@
     <title>Document</title>
 </head>
 <body>
+
+<template id="loading-header-template">
+    <div class="loading-container">
+        <div class="loader-placeholder">Подождите, данные загружаются</div>
+        <img src="img/spinner.gif" alt="loading">
+    </div>
+</template>
+
+<template id="header-city-template">
+    <div>
+        <h2 id="geolocation-city-name">Saint Petersburg</h2>
+        <div class="name">
+            <img id="geolocation-city-icon" class="geolocation-city-icon" src="./img/apple-weather.png" alt="weather">
+            <span id="geolocation-temperature" class="temp-big">8°C</span>
+        </div>
+    </div>
+</template>
+
+<template id="header-city-list-template">
+    <div>
+        <ul>
+            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+        </ul>
+    </div>
+</template>
+
+<template id="loading-city-template">
+    <div class="loading-city">
+        <div class="weather-by-city">
+            <h4>Moscow</h4>
+            <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
+            <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
+            <button disabled class="btn-circle">X</button>
+        </div>
+        <ul>
+            <li class="favourite-inside">Ветер<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+            <li class="favourite-inside">Облачность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+            <li class="favourite-inside">Давление<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+            <li class="favourite-inside">Влажность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+            <li class="favourite-inside">Координаты<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
+        </ul>
+    </div>
+</template>
+
+<template id="favourite-city-template">
+    <div class="loading-city">
+        <div class="weather-by-city">
+            <h4>Moscow</h4>
+            <span class="temp">8°C</span>
+            <img class="city-icon" src="./img/apple-weather.png" alt="">
+            <button class="btn-circle">X</button>
+        </div>
+        <ul>
+            <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
+            <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
+            <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
+            <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
+            <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
+        </ul>
+    </div>
+</template>
+
 <header class="root">
     <h1><span class="weather-here">Погода здесь</span></h1>
     <button onclick="updateCurrentCity()" class="update-btn">

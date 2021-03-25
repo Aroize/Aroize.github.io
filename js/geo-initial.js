@@ -229,16 +229,11 @@ function extractWindDirectionFromDegrees(deg) {
  * view utils
  */
 
-const headerLoadingViewInnerHtml = `
-<div class="loader-placeholder">Подождите, данные загружаются</div>
-<img src="img/spinner.gif" alt="loading">
-`
-
 function createHeaderLoadingElement() {
-    const div = document.createElement("div")
-    div.classList.add("loading-container");
+    const template = document.getElementById("loading-header-template");
+    const docFragment = document.importNode(template.content, true);
+    const div = docFragment.querySelector("div");
     div.id = "loading-view";
-    div.innerHTML = headerLoadingViewInnerHtml;
     return div;
 }
 
@@ -257,31 +252,17 @@ function hideHeaderLoadingView() {
     loadingView.remove();
 }
 
-const headerCityBlock = `
-<h2 id="geolocation-city-name">Saint Petersburg</h2>
-<div class="name">
-    <img id="geolocation-city-icon" class="geolocation-city-icon" src="./img/apple-weather.png" alt="weather">
-    <span id="geolocation-temperature" class="temp-big">8°C</span>
-</div>
-`
-const headerCityList = `
-<ul>
-    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-</ul>
-`
-
 function showCurrentWeatherBlock() {
     hideHeaderLoadingView();
 
-    const headerBlock = document.createElement("div");
-    headerBlock.innerHTML = headerCityBlock;
-    const headerList = document.createElement("div");
+    const headerBlockTemplate = document.getElementById("header-city-template");
+    const headerBlockFragment = document.importNode(headerBlockTemplate.content, true);
+    const headerBlock = headerBlockFragment.querySelector("div");
+
+    const headerListTemplate = document.getElementById("header-city-list-template");
+    const headerListFragment = document.importNode(headerListTemplate.content, true);
+    const headerList = headerListFragment.querySelector("div");
     headerList.id = "info-by-geolocation";
-    headerList.innerHTML = headerCityList;
 
     const container = document.getElementById("main-root");
     container.insertBefore(headerList, container.firstChild);
@@ -296,43 +277,15 @@ function hideCurrentWeatherBlock() {
     }
 }
 
-const favouriteCityBlock = `
-<div class="weather-by-city">
-    <h4>Moscow</h4>
-    <span class="temp">8°C</span>
-    <img class="city-icon" src="./img/apple-weather.png" alt="">
-    <button class="btn-circle">X</button>
-</div>
-<ul>
-    <li class="favourite-inside">Ветер<span class="info-city">Moderate breeze, 6.0m/s, North-northwest</span></li>
-    <li class="favourite-inside">Облачность<span class="info-city">Broken clouds</span></li>
-    <li class="favourite-inside">Давление<span class="info-city">1013 hpa</span></li>
-    <li class="favourite-inside">Влажность<span class="info-city">52 %</span></li>
-    <li class="favourite-inside">Координаты<span class="info-city">[59.88, 30.42]</span></li>
-</ul>
-`
-
 function createFavouriteCityBlock(city) {
-    const block = placeHolderCollection[city['city_name']];
-    block.innerHTML = favouriteCityBlock;
-    return block;
-}
+    const favouriteCityTemplate = document.getElementById("favourite-city-template");
+    const favouriteCityFragment = document.importNode(favouriteCityTemplate.content, true);
+    const favouriteCityDiv = favouriteCityFragment.querySelector("div");
 
-const placeHolderHtml = `
-<div class="weather-by-city">
-    <h4>Moscow</h4>
-    <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
-    <img style="max-width: 50px;max-height: 50px" src="img/spinner.gif" alt="loading">
-    <button disabled class="btn-circle">X</button>
-</div>
-<ul>
-    <li class="favourite-inside">Ветер<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
-    <li class="favourite-inside">Облачность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
-    <li class="favourite-inside">Давление<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
-    <li class="favourite-inside">Влажность<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
-    <li class="favourite-inside">Координаты<img class="little-icon info-city" src="img/spinner.gif" alt="loading"></li>
-</ul>
-`
+    const block = placeHolderCollection[city['city_name']];
+    block.replaceWith(favouriteCityDiv);
+    return favouriteCityDiv;
+}
 
 const placeHolderCollection = {}
 
@@ -349,15 +302,16 @@ function showFavouriteCityLoadingPlaceholder(city) {
         lastListItem.classList.add("container");
         favouritesList.appendChild(lastListItem);
     }
-    const favouriteCityDiv = document.createElement("div");
-    favouriteCityDiv.classList.add("loading-city");
-    favouriteCityDiv.innerHTML = placeHolderHtml;
 
-    const loadingCity = favouriteCityDiv.getElementsByTagName("h4")[0];
+    const placeholderTemplate = document.getElementById("loading-city-template");
+    const placeholderFragment = document.importNode(placeholderTemplate.content, true);
+    const placeholderDiv = placeholderFragment.querySelector("div");
+
+    const loadingCity = placeholderDiv.getElementsByTagName("h4")[0];
     loadingCity.innerHTML = city['city_name'];
 
-    lastListItem.appendChild(favouriteCityDiv);
-    placeHolderCollection[city['city_name']] = favouriteCityDiv;
+    lastListItem.appendChild(placeholderDiv);
+    placeHolderCollection[city['city_name']] = placeholderDiv;
 }
 
 function appendCityToFavourites(city, weather, needToSaveToStorage) {
