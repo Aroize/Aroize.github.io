@@ -437,8 +437,8 @@ function saveCityToStorage(city) {
 }
 
 function removeCityFromStorage(city) {
-    citiesList = citiesList.filter((value) => value['city_id'] !== city['city_id']);
-    storage.removeItem(city['city_id'].toString());
+    citiesList = citiesList.filter((value) => value['id'] !== city['id']);
+    storage.removeItem(city['id'].toString());
 }
 
 function hasCityNameInStorage(cityName) {
